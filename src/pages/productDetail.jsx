@@ -35,7 +35,7 @@ const ProductDetails = () => {
 
       // Make a POST request to your backend to add the product to the cart
       const response = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://artbackend-dvbc.onrender.com/api/cart/add",
         {
           productId: productId,
           quantity: 1, // You can adjust the quantity as needed
