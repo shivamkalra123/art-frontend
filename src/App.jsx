@@ -25,6 +25,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Home />} />
+        <Route path="/product/:productId" element={<ProductDetails />}></Route>
       </Routes>
     </React.Fragment>
   );

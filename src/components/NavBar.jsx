@@ -30,7 +30,7 @@ const NavBar = () => {
       <Container>
         <h2>
           <Link to="/" className="link-light text-decoration-none">
-            ChatApp
+            Art
           </Link>
         </h2>
         {user ? (
