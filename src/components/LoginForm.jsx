@@ -17,6 +17,7 @@ const LoginForm = ({ onLogin }) => {
       );
 
       const { id, name, token } = response.data;
+      localStorage.setItem("token", token);
       onLogin({ id, name, email, token });
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);

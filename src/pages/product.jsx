@@ -39,7 +39,7 @@ const ProductForm = () => {
 
     try {
       const response = await fetch(
-        "https://artbackend-dvbc.onrender.com//api/users/products",
+        "https://artbackend-dvbc.onrender.com/api/users/products",
         {
           method: "POST",
           body: formData,
