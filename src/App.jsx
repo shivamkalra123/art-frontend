@@ -10,7 +10,6 @@ import NavBar from "./components/NavBar";
 const App = () => {
   const [user, setUser] = useState(null);
 
-  // Check for user in localStorage on initial render
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
