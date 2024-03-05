@@ -33,7 +33,7 @@ const CheckoutForm = ({ cartItems, total }) => {
       try {
         const authToken = localStorage.getItem("token");
         const response = await axios.post(
-          "http://localhost:5000/api/payments",
+          "https://artbackend-dvbc.onrender.com/api/payments",
           {
             amount: total,
             currency: "usd",
@@ -99,12 +99,15 @@ const Checkout = () => {
       // ...
       const authToken = localStorage.getItem("token");
       // Example:
-      const response = await axios.get("http://localhost:5000/api/cart", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        // Add headers if needed
-      });
+      const response = await axios.get(
+        "https://artbackend-dvbc.onrender.com/api/cart",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          // Add headers if needed
+        }
+      );
 
       if (response.data && response.data.cart && response.data.cart.items) {
         setCartItems([...response.data.cart.items]);
