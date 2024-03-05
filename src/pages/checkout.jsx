@@ -25,6 +25,9 @@ const CheckoutForm = ({ cartItems, total }) => {
 
     const cardElement = elements.getElement(CardElement);
 
+    // Convert the total amount to cents
+    const amountInCents = Math.round(total * 100);
+
     const { token, error } = await stripe.createToken(cardElement);
 
     if (error) {
@@ -33,17 +36,17 @@ const CheckoutForm = ({ cartItems, total }) => {
       try {
         const authToken = localStorage.getItem("token");
         const response = await axios.post(
-          "https://artbackend-dvbc.onrender.com/api/payments",
+          "http://localhost:5000/api/payments",
           {
-            amount: total,
+            amount: amountInCents, // Send the amount in cents to Stripe
             currency: "usd",
             description: "Payment for items",
             token: token.id,
           },
           {
             headers: {
-              Authorization: `Bearer ${authToken}`, // Replace yourAuthToken with the actual JWT token
-              "Content-Type": "application/json", // Adjust content type if needed
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -99,15 +102,12 @@ const Checkout = () => {
       // ...
       const authToken = localStorage.getItem("token");
       // Example:
-      const response = await axios.get(
-        "https://artbackend-dvbc.onrender.com/api/cart",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-          // Add headers if needed
-        }
-      );
+      const response = await axios.get("http://localhost:5000/api/cart", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        // Add headers if needed
+      });
 
       if (response.data && response.data.cart && response.data.cart.items) {
         setCartItems([...response.data.cart.items]);
