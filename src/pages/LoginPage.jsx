@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
+import { useEffect } from "react";
 
 const LoginPage = () => {
+  useEffect(() => {});
   const navigate = useNavigate();
 
   const handleLogin = (userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     console.log(userData);
-
-    navigate("/");
   };
 
   return (

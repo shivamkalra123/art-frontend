@@ -26,7 +26,8 @@ const Home = () => {
 
   return (
     <div>
-      <h1>All Products</h1>
+      <h1 className="text-2xl flex">All Products</h1>
+
       <ul>
         {products.map((product) => (
           <Link key={product._id} to={`/product/${product._id}`}>

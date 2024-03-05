@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [addToCartStatus, setAddToCartStatus] = useState(null);
   const { productId } = useParams();
-  const authToken = localStorage.getItem("token"); // Retrieve token from storage
-  console.log(authToken);
+  const authToken = localStorage.getItem("token");
+  const navigate = useNavigate(); // Use the useNavigate hook to navigate between pages
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -15,7 +15,6 @@ const ProductDetails = () => {
         const response = await axios.get(
           `https://artbackend-dvbc.onrender.com/api/users/showProductById/${productId}`
         );
-        console.log("Product Details:", response.data);
         setProduct(response.data);
       } catch (error) {
         console.error("Error fetching product details:", error);
@@ -41,16 +40,20 @@ const ProductDetails = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${authToken}`, // Use the stored auth token
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
-      console.log("Add to cart response:", response.data);
       setAddToCartStatus("Product added to cart successfully!");
     } catch (error) {
       console.error("Error adding to cart:", error);
       setAddToCartStatus("Failed to add product to cart.");
     }
+  };
+
+  const handleProceedToCheckout = () => {
+    // Navigate to the checkout page
+    navigate("/checkout");
   };
 
   return (
@@ -69,6 +72,7 @@ const ProductDetails = () => {
           <p>Category: {product.category}</p>
           <button onClick={handleAddToCart}>Add to Cart</button>
           {addToCartStatus && <p>{addToCartStatus}</p>}
+          <button onClick={handleProceedToCheckout}>Proceed to Checkout</button>
         </div>
       ) : (
         <p>Loading...</p>
