@@ -1,5 +1,4 @@
-// src/components/LoginForm.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const LoginForm = ({ onLogin }) => {
@@ -23,6 +22,25 @@ const LoginForm = ({ onLogin }) => {
       console.error("Login failed:", error.response?.data || error.message);
     }
   };
+
+  const handleLogout = () => {
+    // Implement your logout logic here, e.g., clearing localStorage
+    localStorage.removeItem("token");
+  };
+
+  useEffect(() => {
+    // Attach event listener for window close
+    const handleWindowClose = () => {
+      handleLogout();
+    };
+
+    window.addEventListener("beforeunload", handleWindowClose);
+
+    // Cleanup the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("beforeunload", handleWindowClose);
+    };
+  }, []); // Empty dependency array ensures the effect runs only once on mount
 
   return (
     <div>
