@@ -25,23 +25,48 @@ const NavBar = () => {
       const authToken = localStorage.getItem("token");
 
       try {
-        const response = await axios.get("http://localhost:5000/api/cart", {
+        const cartResponse = await axios.get("http://localhost:5000/api/cart", {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
 
-        if (response.data && response.data.cart && response.data.cart.items) {
-          setCartItems([...response.data.cart.items]);
-          setCartCount(response.data.cart.items.length);
+        if (
+          cartResponse.data &&
+          cartResponse.data.cart &&
+          cartResponse.data.cart.items
+        ) {
+          setCartItems([...cartResponse.data.cart.items]);
         }
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
     };
 
+    const fetchCartCount = async () => {
+      const authToken = localStorage.getItem("token");
+
+      try {
+        const countResponse = await axios.get(
+          "http://localhost:5000/api/cart/count",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+
+        if (countResponse.data && countResponse.data.count) {
+          setCartCount(countResponse.data.count);
+        }
+      } catch (error) {
+        console.error("Error fetching cart count:", error);
+      }
+    };
+
     fetchUser();
     fetchCartItems();
+    fetchCartCount();
   }, []); // Empty dependency array to run the effect only once on initial render
 
   // Handle logout and clear user from localStorage

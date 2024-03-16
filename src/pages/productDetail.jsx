@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
-const ProductDetails = () => {
+const ProductDetails = ({ updateCartCount }) => {
   const [product, setProduct] = useState(null);
   const [addToCartStatus, setAddToCartStatus] = useState(null);
   const { productId } = useParams();
@@ -45,6 +45,9 @@ const ProductDetails = () => {
         }
       );
       setAddToCartStatus("Product added to cart successfully!");
+
+      // Update cart count in the parent component (NavBar)
+      updateCartCount();
     } catch (error) {
       console.error("Error adding to cart:", error);
       setAddToCartStatus("Failed to add product to cart.");
