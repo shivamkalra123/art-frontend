@@ -26,7 +26,7 @@ const App = () => {
 
   return (
     <React.Fragment>
-      <NavBar user={user} />
+      {user && <NavBar user={user} />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

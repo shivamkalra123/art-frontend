@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -17,30 +19,16 @@ const LoginForm = ({ onLogin }) => {
 
       const { id, name, token } = response.data;
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify({ id, name, email }));
+
       onLogin({ id, name, email, token });
+
+      // Navigate to the main page after successful login
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
     }
   };
-
-  const handleLogout = () => {
-    // Implement your logout logic here, e.g., clearing localStorage
-    localStorage.removeItem("token");
-  };
-
-  useEffect(() => {
-    // Attach event listener for window close
-    const handleWindowClose = () => {
-      handleLogout();
-    };
-
-    window.addEventListener("beforeunload", handleWindowClose);
-
-    // Cleanup the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener("beforeunload", handleWindowClose);
-    };
-  }, []); // Empty dependency array ensures the effect runs only once on mount
 
   return (
     <div>

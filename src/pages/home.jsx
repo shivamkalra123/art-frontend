@@ -1,6 +1,9 @@
+// Home.jsx
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import "../css/home.css";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -26,11 +29,13 @@ const Home = () => {
 
   return (
     <div>
-      <h1 className="text-2xl flex">All Products</h1>
-
-      <ul>
+      <div className="products">
         {products.map((product) => (
-          <Link key={product._id} to={`/product/${product._id}`}>
+          <Link
+            key={product._id}
+            to={`/product/${product._id}`}
+            className="product"
+          >
             {product.image && (
               <img
                 src={`https://artbackend-dvbc.onrender.com/uploads/${product.image}`}
@@ -40,10 +45,9 @@ const Home = () => {
             )}
             <p>{product.name}</p>
             <p>${product.price}</p>
-            <hr />
           </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

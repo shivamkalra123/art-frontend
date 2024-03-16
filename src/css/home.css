@@ -1,0 +1,39 @@
+/* home.css */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr)); /* Change this line */
+  gap: 20px;
+  width: 50%;
+}
+
+.products a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.products img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.products p {
+  margin: 5px 0;
+  text-align: center;
+}
+
+/* Add a border for better visibility */
+.products a {
+  display: block;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.products a:hover {
+  transform: scale(1.05);
+}
