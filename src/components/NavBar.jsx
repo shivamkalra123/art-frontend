@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import { FiUser, FiShoppingCart } from "react-icons/fi";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
-import { io } from "socket.io-client";
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
@@ -13,6 +11,7 @@ const NavBar = () => {
   const [showCartModal, setShowCartModal] = useState(false);
   const [cartItems, setCartItems] = useState([]);
 
+  // Check for user in localStorage on initial render
   useEffect(() => {
     const fetchUser = async () => {
       const storedUser = localStorage.getItem("user");
@@ -22,21 +21,6 @@ const NavBar = () => {
       }
     };
 
-    const setupWebSocket = () => {
-      const socket = io("http://localhost:5000"); // Replace with your backend server address
-
-      socket.on("connect", () => {
-        console.log("Connected to WebSocket");
-      });
-
-      socket.on("cartUpdate", () => {
-        fetchCartItems();
-      });
-
-      socket.on("disconnect", () => {
-        console.log("Disconnected from WebSocket");
-      });
-    };
     const fetchCartItems = async () => {
       const authToken = localStorage.getItem("token");
 
@@ -58,19 +42,21 @@ const NavBar = () => {
 
     fetchUser();
     fetchCartItems();
-    setupWebSocket();
-  }, []);
+  }, []); // Empty dependency array to run the effect only once on initial render
 
+  // Handle logout and clear user from localStorage
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
 
+  // Handle click on cart icon
   const handleCartClick = () => {
     setShowCartModal(true);
   };
 
+  // Close the cart modal
   const handleCloseCartModal = () => {
     setShowCartModal(false);
   };
@@ -90,6 +76,7 @@ const NavBar = () => {
             ) : (
               <GuestUserNav />
             )}
+            {/* Cart Icon */}
             <Link
               to="#"
               className="link-light text-decoration-none"
@@ -104,6 +91,7 @@ const NavBar = () => {
         </Nav>
       </Container>
 
+      {/* Cart Modal */}
       <Modal show={showCartModal} onHide={handleCloseCartModal}>
         <Modal.Header closeButton>
           <Modal.Title>Your Cart</Modal.Title>
@@ -129,6 +117,7 @@ const NavBar = () => {
   );
 };
 
+// Component for logged-in user navigation
 const LoggedInUserNav = ({ user, onLogout }) => (
   <Nav>
     <Stack direction="horizontal" gap={3}>
@@ -144,6 +133,7 @@ const LoggedInUserNav = ({ user, onLogout }) => (
   </Nav>
 );
 
+// Component for guest user navigation
 const GuestUserNav = () => (
   <Nav>
     <Stack direction="horizontal" gap={3}>
