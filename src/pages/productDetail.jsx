@@ -5,9 +5,10 @@ import { useParams, useNavigate } from "react-router-dom";
 const ProductDetails = ({ updateCartCount }) => {
   const [product, setProduct] = useState(null);
   const [addToCartStatus, setAddToCartStatus] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const { productId } = useParams();
   const authToken = localStorage.getItem("token");
-  const navigate = useNavigate(); // Use the useNavigate hook to navigate between pages
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -36,7 +37,7 @@ const ProductDetails = ({ updateCartCount }) => {
         "https://artbackend-dvbc.onrender.com/api/cart/add",
         {
           productId: productId,
-          quantity: 1,
+          quantity: quantity,
         },
         {
           headers: {
@@ -46,7 +47,6 @@ const ProductDetails = ({ updateCartCount }) => {
       );
       setAddToCartStatus("Product added to cart successfully!");
 
-      // Update cart count in the parent component (NavBar)
       updateCartCount();
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -55,27 +55,62 @@ const ProductDetails = ({ updateCartCount }) => {
   };
 
   const handleProceedToCheckout = () => {
-    // Navigate to the checkout page
     navigate("/checkout");
   };
 
   return (
-    <div>
-      <h1>Product Details</h1>
+    <div className="container mx-auto px-4 py-8 ">
       {product ? (
-        <div>
+        <div className="grid grid-cols-1 md:grid-cols-3  items-center ">
           <img
             src={`https://artbackend-dvbc.onrender.com/uploads/${product.image}`}
             alt={product.name}
-            style={{ maxWidth: "100%", maxHeight: "200px" }}
+            className="max-w-full max-h-96 object-cover rounded ml-20"
           />
-          <p>{product.name}</p>
-          <p>Description: {product.description}</p>
-          <p>Price: ${product.price}</p>
-          <p>Category: {product.category}</p>
-          <button onClick={handleAddToCart}>Add to Cart</button>
-          {addToCartStatus && <p>{addToCartStatus}</p>}
-          <button onClick={handleProceedToCheckout}>Proceed to Checkout</button>
+          <div>
+            <p className="text-xl font-bold mb-2">{product.name}</p>
+            <p className="mb-2">{product.description}</p>
+            <p className="font-bold mb-2">${product.price}</p>
+            <p className="mb-2">Category: {product.category}</p>
+            <div className="flex mb-2">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-l"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              >
+                -
+              </button>
+              <input
+                type="number"
+                value={quantity}
+                className="w-16 text-center"
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+              />
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-r"
+                onClick={() => setQuantity(quantity + 1)}
+              >
+                +
+              </button>
+            </div>
+            <div>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:text-gray-200"
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </button>
+
+              {addToCartStatus && (
+                <p className="text-red-500">{addToCartStatus}</p>
+              )}
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded "
+                onClick={handleProceedToCheckout}
+              >
+                Proceed to Checkout
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <p>Loading...</p>

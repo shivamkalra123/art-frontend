@@ -3,7 +3,6 @@ import { Container, Nav, Navbar, Stack, Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FiUser, FiShoppingCart } from "react-icons/fi";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
@@ -25,48 +24,23 @@ const NavBar = () => {
       const authToken = localStorage.getItem("token");
 
       try {
-        const cartResponse = await axios.get("http://localhost:5000/api/cart", {
+        const response = await axios.get("http://localhost:5000/api/cart", {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
 
-        if (
-          cartResponse.data &&
-          cartResponse.data.cart &&
-          cartResponse.data.cart.items
-        ) {
-          setCartItems([...cartResponse.data.cart.items]);
+        if (response.data && response.data.cart && response.data.cart.items) {
+          setCartItems([...response.data.cart.items]);
+          setCartCount(response.data.cart.items.length);
         }
       } catch (error) {
         console.error("Error fetching cart items:", error);
       }
     };
 
-    const fetchCartCount = async () => {
-      const authToken = localStorage.getItem("token");
-
-      try {
-        const countResponse = await axios.get(
-          "http://localhost:5000/api/cart/count",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-
-        if (countResponse.data && countResponse.data.count) {
-          setCartCount(countResponse.data.count);
-        }
-      } catch (error) {
-        console.error("Error fetching cart count:", error);
-      }
-    };
-
     fetchUser();
     fetchCartItems();
-    fetchCartCount();
   }, []); // Empty dependency array to run the effect only once on initial render
 
   // Handle logout and clear user from localStorage
@@ -87,34 +61,35 @@ const NavBar = () => {
   };
 
   return (
-    <Navbar bg="black">
-      <Container>
-        <h2>
-          <Link to="/" className="link-light text-decoration-none">
-            Art
+    <div className=" bg-black/30 py-6 px-10 flex justify-between align-middle w-full absolute z-50 text-white font-poppins ">
+      <div className="flex justify-between align-middle w-full ">
+        <div>
+          <Link
+            to="/"
+            className=" text- text-3xl font-semibold hover:[text-shadow:_2px_3px_3px_rgb(255_255_255_/_40%)] duration-75 ease-in-out"
+          >
+            MusingArtistry
           </Link>
-        </h2>
-        <Nav>
-          <Stack direction="horizontal" gap={3}>
+        </div>
+
+        <div>
+          <div className="flex justify-between align-middle">
             {user ? (
               <LoggedInUserNav user={user} onLogout={handleLogout} />
             ) : (
               <GuestUserNav />
             )}
+
             {/* Cart Icon */}
-            <Link
-              to="#"
-              className="link-light text-decoration-none"
-              onClick={handleCartClick}
-            >
-              <FiShoppingCart size={24} color="white" />
+            <Link to="#" className="mx-4" onClick={handleCartClick}>
+              <FiShoppingCart size={30} color="white" />
               {cartCount > 0 && (
                 <span className="badge bg-danger">{cartCount}</span>
               )}
             </Link>
-          </Stack>
-        </Nav>
-      </Container>
+          </div>
+        </div>
+      </div>
 
       {/* Cart Modal */}
       <Modal show={showCartModal} onHide={handleCloseCartModal}>
@@ -138,38 +113,42 @@ const NavBar = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </Navbar>
+    </div>
   );
 };
 
 // Component for logged-in user navigation
 const LoggedInUserNav = ({ user, onLogout }) => (
   <Nav>
-    <Stack direction="horizontal" gap={3}>
+    <div>
       <FiUser size={24} color="white" />
       <Link
         onClick={onLogout}
         to="/login"
-        className="link-light text-decoration-none"
+        className="mx-4 border-[1.5px] px-4 py-[3px] rounded-2xl font-poppins"
       >
         Logout
       </Link>
-    </Stack>
+    </div>
   </Nav>
 );
 
 // Component for guest user navigation
 const GuestUserNav = () => (
-  <Nav>
-    <Stack direction="horizontal" gap={3}>
-      <Link to="/login" className="link-light text-decoration-none">
-        Login
-      </Link>
-      <Link to="/register" className="link-light text-decoration-none">
-        Register
-      </Link>
-    </Stack>
-  </Nav>
+  <div className="flex justify-between align-middle text-center font-poppins ">
+    <Link
+      to="/login"
+      className="mx-5 my-[5px] text-xl hover:[text-shadow:_2px_3px_3px_rgb(255_255_255_/_40%)] duration-75 ease-in-out"
+    >
+      Login
+    </Link>
+    <Link
+      to="/register"
+      className="mx-5 my-[5px] text-xl hover:[text-shadow:_2px_3px_3px_rgb(255_255_255_/_40%)] duration-75 ease-in-out"
+    >
+      Register
+    </Link>
+  </div>
 );
 
 export default NavBar;
